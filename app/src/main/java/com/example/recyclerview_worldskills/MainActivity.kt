@@ -1,0 +1,72 @@
+package com.example.recyclerview_worldskills
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import com.example.recyclerview_worldskills.databinding.ActivityMainBinding
+import com.example.recyclerview_worldskills.model.User
+
+class MainActivity : AppCompatActivity(), Navigator {
+
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private var currentFragment: Fragment? = null
+
+    private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks(){
+        override fun onFragmentViewCreated(
+            fm: FragmentManager,
+            f: Fragment,
+            v: View,
+            savedInstanceState: Bundle?
+        ) {
+            super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+            if (f is NavHostFragment) return
+            currentFragment = f
+            updateUi()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater).also {  setContentView(it.root) }
+        setSupportActionBar(binding.toolbar)
+
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
+        navController = navHost.navController
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentListener)
+    }
+
+    override fun onSupportNavigateUp() = navController.navigateUp() || super.onSupportNavigateUp()
+
+    private fun updateUi(){
+
+        if (navController.currentDestination?.id == navController.graph.startDestination){
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        } else{
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+
+    }
+
+    override fun showDetails(user: User) {
+        TODO("Not yet implemented")
+    }
+
+    override fun goBack() {
+        onBackPressed()
+    }
+
+    override fun toast(messageRes: Int) {
+        Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
+    }
+}
