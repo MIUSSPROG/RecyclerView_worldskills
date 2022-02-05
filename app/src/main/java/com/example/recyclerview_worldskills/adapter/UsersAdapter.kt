@@ -11,7 +11,18 @@ import com.example.recyclerview_worldskills.R
 import com.example.recyclerview_worldskills.databinding.ItemUserBinding
 import com.example.recyclerview_worldskills.model.User
 
-class UsersAdapter : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>(), View.OnClickListener {
+
+interface UserActionListener{
+    fun onUserMove(user: User, moveBy: Int)
+
+    fun onUserDelete(user: User)
+
+    fun onUserDetails(user: User)
+}
+
+class UsersAdapter(
+    private val actionListener: UserActionListener
+) : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>(), View.OnClickListener {
 
     var users: List<User> = emptyList()
     set(newValue) {
@@ -22,6 +33,9 @@ class UsersAdapter : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>(), View.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemUserBinding.inflate(inflater, parent, false)
+
+        binding.root.setOnClickListener(this)
+        binding.imgvMore.setOnClickListener(this)
 
         return UsersViewHolder(binding)
     }
@@ -69,18 +83,29 @@ class UsersAdapter : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>(), View.
         val user = v.tag as User
         val position = users.indexOfFirst { it.id == user.id }
 
-        popupMenu.menu.add(0 ,ID_MOVE_UP, Menu.NONE ,context.getString(R.string.move_up))
-        popupMenu.menu.add(0 , ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.move_up))
-        popupMenu.menu.add(0 , ID_REMOVE, Menu.NONE, context.getString(R.string.move_up))
-        popupMenu.menu.add(0 , ID_FIRE, Menu.NONE, context.getString(R.string.move_up))
+        popupMenu.menu.add(0 ,ID_MOVE_UP, Menu.NONE ,context.getString(R.string.move_up)).apply {
+            isEnabled = position > 0
+        }
+        popupMenu.menu.add(0 , ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.move_down)).apply {
+            isEnabled = position < users.size - 1
+        }
+        popupMenu.menu.add(0 , ID_REMOVE, Menu.NONE, context.getString(R.string.remove))
+        popupMenu.menu.add(0 , ID_FIRE, Menu.NONE, context.getString(R.string.fire))
 
-//        popupMenu.setOnMenuItemClickListener {
-//            when(it.itemId){
-//                ID_MOVE_UP -> {
-//
-//                }
-//            }
-//        }
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId){
+                ID_MOVE_UP -> {
+                    actionListener.onUserMove(user, -1)
+                }
+                ID_MOVE_DOWN -> {
+                    actionListener.onUserMove(user, 1)
+                }
+                ID_REMOVE -> {
+                    actionListener.onUserDelete(user)
+                }
+            }
+            return@setOnMenuItemClickListener true
+        }
 
         popupMenu.show()
 

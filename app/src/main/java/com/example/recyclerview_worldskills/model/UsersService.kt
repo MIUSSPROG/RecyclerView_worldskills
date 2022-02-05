@@ -43,7 +43,7 @@ class UsersService {
 
     fun addListener(listener: UsersListener){
         listeners.add(listener)
-        listener.invoke(users)
+        listener(users)
     }
 
     fun removeListener(listener: UsersListener){
