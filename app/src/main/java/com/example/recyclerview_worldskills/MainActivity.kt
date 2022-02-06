@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.recyclerview_worldskills.databinding.ActivityMainBinding
+import com.example.recyclerview_worldskills.fragments.UserDetailsFragment
 import com.example.recyclerview_worldskills.model.User
 
 class MainActivity : AppCompatActivity(), Navigator {
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun showDetails(user: User) {
-        TODO("Not yet implemented")
+        navController.navigate(R.id.userDetailsFragment, UserDetailsFragment.createArgs(user.id))
     }
 
     override fun goBack() {

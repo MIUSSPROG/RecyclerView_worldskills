@@ -1,6 +1,8 @@
 package com.example.recyclerview_worldskills.model
 
+import com.example.recyclerview_worldskills.utils.UserNotFoundException
 import com.github.javafaker.Faker
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -34,6 +36,14 @@ class UsersService {
         }
     }
 
+    fun getById(id: Long): UserDetails{
+        val user = users.firstOrNull { it.id == id } ?: throw UserNotFoundException()
+        return UserDetails(
+            user = user,
+            details = Faker.instance().lorem().paragraphs(3).joinToString("\n\n")
+        )
+    }
+
     fun moveUser(user: User, moveBy: Int){
         val oldIndex = users.indexOfFirst { it.id == user.id }
         if (oldIndex == -1) return
@@ -47,6 +57,15 @@ class UsersService {
     fun addListener(listener: UsersListener){
         listeners.add(listener)
         listener(users)
+    }
+
+    fun fireUser(user: User){
+        val index = users.indexOfFirst { it.id == user.id }
+        if (index == -1) return
+        val updatedUser = users[index].copy(company = "")
+        users = ArrayList(users)
+        users[index] = updatedUser
+        notifyChanges()
     }
 
     fun removeListener(listener: UsersListener){

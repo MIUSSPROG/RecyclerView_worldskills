@@ -1,5 +1,6 @@
 package com.example.recyclerview_worldskills
 
+import androidx.annotation.StringRes
 import com.example.recyclerview_worldskills.model.User
 
 interface Navigator {
@@ -8,5 +9,5 @@ interface Navigator {
 
     fun goBack()
 
-    fun toast(messageRes: Int)
+    fun toast(@StringRes messageRes: Int)
 }
