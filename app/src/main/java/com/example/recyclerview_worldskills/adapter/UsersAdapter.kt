@@ -100,6 +100,9 @@ class UsersAdapter(
             R.id.imgvMore -> {
                 showPopupMenu(v)
             }
+            else -> {
+                actionListener.onUserDetails(user)
+            }
         }
     }
 
