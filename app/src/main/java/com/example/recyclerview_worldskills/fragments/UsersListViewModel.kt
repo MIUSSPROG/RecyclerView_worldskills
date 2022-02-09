@@ -35,6 +35,10 @@ class UsersListViewModel(
         usersService.moveUser(user, moveBy)
     }
 
+    fun swapUsers(startPos: Int, endPos: Int){
+        usersService.swapUsers(startPos, endPos)
+    }
+
     fun deleteUser(user: User){
         usersService.deleteUser(user)
     }

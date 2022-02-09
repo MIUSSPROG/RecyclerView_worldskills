@@ -44,6 +44,11 @@ class UsersService {
         )
     }
 
+    fun swapUsers(startPos: Int, endPos: Int){
+        Collections.swap(users, startPos, endPos)
+        notifyChanges()
+    }
+
     fun moveUser(user: User, moveBy: Int){
         val oldIndex = users.indexOfFirst { it.id == user.id }
         if (oldIndex == -1) return

@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.recyclerview_worldskills.R
-import com.example.recyclerview_worldskills.adapter.UsersAdapter
 import com.example.recyclerview_worldskills.databinding.FragmentUserDetailsBinding
 import com.example.recyclerview_worldskills.databinding.FragmentUsersListBinding
 import com.example.recyclerview_worldskills.utils.factory
